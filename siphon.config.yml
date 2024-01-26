@@ -1,0 +1,3 @@
+proxy:
+  host: localhost
+  port: 4040

@@ -1,0 +1,8 @@
+{
+  "verbose": true,
+  "watch": ["**/siphon/*.go"],
+  "ext": "go",
+  "exec": "make run",
+  "signal": "SIGTERM",
+  "delay": 2
+}
