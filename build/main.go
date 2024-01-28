@@ -14,30 +14,45 @@ func main() {
 
 	siphonConfig := config.ReadConfig(&cliFlags)
 
-	file, err := os.ReadFile("/home/stephan/Projects/siphon/build/handler.template.txt")
+	handlerTemplateFile, err := os.ReadFile("templates/handler.template.txt")
 
 	if err != nil {
-		log.Fatalf("Failed to read file %v", err)
+		log.Fatalf("Failed to read handler file %v", err)
 	}
 
-	templateFile, err := template.New("handler").Funcs(CustomFns).Parse(string(file))
+	parsedHandlerTemplateFile, err := template.New("handler").Funcs(CustomFns).Parse(string(handlerTemplateFile))
 
 	if err != nil {
-		log.Fatalf("Failed to create template %v", err)
+		log.Fatalf("Failed to create handler template %v", err)
 	}
 
-	// Create a new file to write the output
-	outputFile, err := os.Create("/home/stephan/Projects/siphon/handler.go")
+	handlerOutputFile, err := os.Create("../handler.go")
 	if err != nil {
 		panic(err)
 	}
-	defer outputFile.Close()
+	defer handlerOutputFile.Close()
 
-	data := struct {
-		AllowedVerbs []string
-	}{
-		AllowedVerbs: siphonConfig.AllowedVerbs,
+	parsedHandlerTemplateFile.Execute(handlerOutputFile, siphonConfig)
+
+	// ****************************************************************
+
+	mainTemplateFile, err := os.ReadFile("templates/main.template.txt")
+
+	if err != nil {
+		log.Fatalf("Failed to read handler file %v", err)
 	}
 
-	templateFile.Execute(outputFile, data)
+	parsedMainTemplateFile, err := template.New("main").Funcs(CustomFns).Parse(string(mainTemplateFile))
+
+	if err != nil {
+		log.Fatalf("Failed to create handler template %v", err)
+	}
+
+	mainOutputFile, err := os.Create("../main.go")
+	if err != nil {
+		panic(err)
+	}
+	defer mainOutputFile.Close()
+
+	parsedMainTemplateFile.Execute(mainOutputFile, siphonConfig)
 }

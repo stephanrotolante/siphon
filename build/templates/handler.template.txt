@@ -4,11 +4,9 @@ import (
 	"io"
 	"math/rand"
 	"net/http"
-
-	"github.com/stephanrotolante/siphon/config"
 )
 
-func Handler(siphonConfig *config.SiphonConfig) http.Handler {
+func Handler() http.Handler {
 
 	var client = &http.Client{}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -16,9 +14,9 @@ func Handler(siphonConfig *config.SiphonConfig) http.Handler {
 
 			randomInt := rand.Intn(100)
 
-			if randomInt < siphonConfig.Target.Probability {
+			if randomInt < {{.Target.Probability}} {
 
-				req, err := http.NewRequest(r.Method, siphonConfig.Target.TargetHost, r.Body)
+				req, err := http.NewRequest(r.Method, "{{.Target.TargetHost}}", r.Body)
 
 				req.Header = r.Header
 				if err != nil {
@@ -48,7 +46,7 @@ func Handler(siphonConfig *config.SiphonConfig) http.Handler {
 			}
 		}
 
-		req, err := http.NewRequest(r.Method, siphonConfig.Target.DefaultHost, r.Body)
+		req, err := http.NewRequest(r.Method, "{{.Target.DefaultHost}}", r.Body)
 
 		req.Header = r.Header
 		if err != nil {

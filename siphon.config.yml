@@ -8,7 +8,7 @@ target:
   default_host: http://localhost:8000
 
 https:
-  enabled: true
+  enabled: false
   cert_path: ""
   key_path: ""
 

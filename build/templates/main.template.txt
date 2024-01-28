@@ -1,0 +1,33 @@
+package main
+
+import (
+	"fmt"
+	"net/http"
+)
+
+func main() {
+
+	fmt.Println(fmt.Sprintf("Starting siphon on port %d...", {{.Proxy.Port}}))
+
+    {{ if .Https.Enabled}}
+    err := http.ListenAndServeTLS(
+        fmt.Sprintf("%s:%d", "{{.Proxy.Host}}", {{.Proxy.Port}}),
+        siphonConfig.Https.CertPath,
+        siphonConfig.Https.KeyPath,
+        Handler())
+
+    if err != nil {
+        fmt.Println("Error starting the tls server:", err)
+    }
+    {{else}}
+    err := http.ListenAndServe(
+    fmt.Sprintf("%s:%d", "{{.Proxy.Host}}", {{.Proxy.Port}}),
+    Handler())
+
+    if err != nil {
+        fmt.Println("Error starting the server:", err)
+    }
+    {{end}}
+
+
+}
