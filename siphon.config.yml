@@ -3,7 +3,7 @@ proxy:
   port: 4040
 
 target:
-  probability: 50
+  probability: 75
   target_host: http://localhost:8000
   default_host: http://localhost:8000
 
@@ -14,4 +14,3 @@ https:
 
 allowed_verbs:
   - GET
-  - DELETE
